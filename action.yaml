@@ -35,12 +35,12 @@ runs:
       shell: bash
       run: |
         find ${{ inputs.source_dir }} -name "*.md" -print0 | xargs -0 -I {} bash -c '
-          file_name=$(basename {} .${{ inputs.file_extension }});
+          file_name=$(basename {} .md);
           file_dir=$(dirname {});
           mkdir -p ${{ inputs.output_dir }}/${file_dir};
           docker run --rm -v "$(pwd):/data" --user $(id -u):$(id -g) pandoc-docs ${{ inputs.pandoc_filters }} --output=${{ inputs.output_dir }}/${file_dir}/${file_name}.${{ inputs.output_format }} {};
           if [ $? -ne 0 ]; then
-            echo "Pandoc failed for ${file_name}.${{ inputs.file_extension }}"
+            echo "Pandoc failed for ${file_name}.md"
             exit 1;
           fi;
         '

@@ -1,4 +1,4 @@
-FROM pandoc/core:3.6
+FROM pandoc/latex:3.6
 
 ARG UID=1000
 ARG GID=1000

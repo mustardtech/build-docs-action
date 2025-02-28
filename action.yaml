@@ -37,8 +37,8 @@ runs:
         find ${{ inputs.path }} -name "*.md" -print0 | xargs -0 -I {} bash -c '
           file_name=$(basename {} .md);
           file_dir=$(dirname {});
-          mkdir -p ${{ inputs.dest }}/${file_dir};
-          docker run --rm -v "$(pwd):/data" --user $(id -u):$(id -g) pandoc-docs ${{ inputs.filters }} --output=${{ inputs.dest }}/${file_dir}/${file_name}.${{ inputs.format }} {};
+          mkdir -p ${{ inputs.output }}/${file_dir};
+          docker run --rm -v "$(pwd):/data" --user $(id -u):$(id -g) pandoc-docs ${{ inputs.filters }} --output=${{ inputs.output }}/${file_dir}/${file_name}.${{ inputs.format }} {};
           if [ $? -ne 0 ]; then
             echo "Pandoc failed for ${file_name}.md"
             exit 1;

@@ -21,7 +21,7 @@ jobs:
           path: output-docx
           retention-days: 1
 
-      - uses: mustardtech/build-docs-action@main
+      - uses: mustardtech/build-docs-action@dev
         with:
           output: output-pdf
           format: pdf

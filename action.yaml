@@ -29,7 +29,7 @@ runs:
     - name: Build Docker image
       shell: bash
       run: |
-        docker build . --file Dockerfile --tag pandoc-docs
+        docker build "${GITHUB_ACTION_PATH}" --file "${GITHUB_ACTION_PATH}/Dockerfile" --tag pandoc-docs
 
     - name: Find Markdown files and build
       shell: bash

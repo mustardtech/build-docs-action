@@ -1,0 +1,46 @@
+name: "Build docs"
+description: "Build all markdown docs within source folder with pandoc"
+author: "matt"
+branding:
+  icon: "layers"
+  color: "#dcac5b"
+
+inputs:
+  path:
+    description: "Source path directory to build all `*.md` docs within."
+    required: false
+    default: "docs"
+  output:
+    description: "The output directory for the generated documents."
+    required: false
+    default: "output"
+  format:
+    description: "Pandoc output document format."
+    required: false
+    default: "docx"
+  filters:
+    description: "Pandoc filters to use."
+    required: false
+    default: "--filter=mermaid-filter"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Build Docker image
+      shell: bash
+      run: |
+        docker build . --file Dockerfile --tag pandoc-docs
+
+    - name: Find Markdown files and build
+      shell: bash
+      run: |
+        find ${{ inputs.path }} -name "*.md" -print0 | xargs -0 -I {} bash -c '
+          file_name=$(basename {} .md);
+          file_dir=$(dirname {});
+          mkdir -p ${{ inputs.output }}/${file_dir};
+          docker run --rm -v "$(pwd):/data" --user $(id -u):$(id -g) pandoc-docs ${{ inputs.filters }} --output=${{ inputs.output }}/${file_dir}/${file_name}.${{ inputs.format }} {};
+          if [ $? -ne 0 ]; then
+            echo "Pandoc failed for ${file_name}.md"
+            exit 1;
+          fi;
+        '
